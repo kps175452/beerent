@@ -16,87 +16,144 @@ document.addEventListener('DOMContentLoaded', () => {
     
     // Function to position comments relative to mark
     const positionComments = (mark, comments) => {
-        const container = document.querySelector('.screen-container');
-        const containerRect = container.getBoundingClientRect();
-        const markRect = mark.getBoundingClientRect();
+        const wrapper = document.querySelector('.screen-wrapper');
+        const wrapperWidth = wrapper.offsetWidth;
 
-        const markTop = markRect.top - containerRect.top;
-        const markLeft = markRect.left - containerRect.left;
-        const markRight = markRect.right - containerRect.left;
-        const markCenterY = markTop + (markRect.height / 2);
+        // Native DOM offset properties guarantee pixel-perfect positioning regardless of CSS transforms or scrolls!
+        const markTop = mark.offsetTop;
+        const markLeft = mark.offsetLeft;
+        const markWidth = mark.offsetWidth;
+        const markHeight = mark.offsetHeight;
+        
+        const markRight = markLeft + markWidth;
+        const markCenterY = markTop + (markHeight / 2);
         
         // Manual logic based on USER_REQUEST: 
         // 1-2 on the left, 3-6 on the right
         const markClass = Array.from(mark.classList).find(c => c.startsWith('mark-'));
-        const markNum = markClass.split('-')[1]; // handles mark-1, mark-2-1, mark-3, etc.
-        const shouldBeOnLeft = (markNum === '1' || markNum === '2');
-        
-        comments.forEach((comment, index) => {
-            // Stack multiple comments vertically (useful for mark-4)
-            const verticalOffset = index * 95; // Approximate height of a comment card
-            
-            comment.style.top = `${markCenterY + verticalOffset}px`;
+        const markNum = markClass.split('-')[1];
+        let forceLeft = false;
 
-            if (shouldBeOnLeft) {
-                // Show to the left of the mark
-                comment.style.right = `${containerRect.width - markLeft + 8}px`;
+        // Smart mobile boundary check: if comment on right would spill outside the 1100px dashboard
+        if (window.innerWidth <= 1100) {
+            const commentWidth = 260; // Approximate max width
+            if (markRight + commentWidth + 20 > 1100) {
+                forceLeft = true;
+            }
+        }
+
+        const shouldBeOnLeft = (markNum === '1' || markNum === '2') || forceLeft;
+        
+        // When there are multiple comments, calculate an offset so the whole group is centered
+        const cardHeight = 105;
+        const startOffset = -((comments.length - 1) * cardHeight / 2);
+
+        comments.forEach((comment, index) => {
+            if (markNum === '6' && !forceLeft) {
+                // Special case for mark-6: below the point, aligned by right edge
+                const markBottom = markTop + markHeight;
+                comment.style.top = `${markBottom + 12}px`;
+                comment.style.right = `${wrapperWidth - markRight}px`;
                 comment.style.left = 'auto';
+                comment.style.transform = 'translateY(0) scale(1)';
+                if (!comment.classList.contains('active')) {
+                    comment.style.transform = 'translateY(0) scale(0.9)';
+                }
             } else {
-                // Show to the right of the mark
-                comment.style.left = `${markRight + 8}px`;
-                comment.style.right = 'auto';
+                const verticalOffset = startOffset + (index * cardHeight);
+                comment.style.top = `${markCenterY + verticalOffset}px`;
+
+                if (shouldBeOnLeft) {
+                    comment.style.right = `${wrapperWidth - markLeft + 8}px`;
+                    comment.style.left = 'auto';
+                } else {
+                    comment.style.left = `${markRight + 8}px`;
+                    comment.style.right = 'auto';
+                }
+                comment.style.removeProperty('transform');
             }
         });
     };
 
-    // Handle mark hover
+    // Handle mark interactions (Hover for desktop, Click for mobile)
     marks.forEach(mark => {
+        // Desktop Hover
         mark.addEventListener('mouseenter', () => {
-            const commentClass = mark.dataset.comment;
-            const relatedComments = document.querySelectorAll(`.${commentClass}`);
-            
-            positionComments(mark, relatedComments);
-            relatedComments.forEach(comment => {
-                comment.classList.add('active');
-            });
+            if (window.innerWidth > 1100) {
+                const commentClass = mark.dataset.comment;
+                const relatedComments = document.querySelectorAll(`.${commentClass}`);
+                
+                positionComments(mark, relatedComments);
+                relatedComments.forEach(comment => {
+                    comment.classList.add('active');
+                });
+            }
         });
         
         mark.addEventListener('mouseleave', () => {
-            const commentClass = mark.dataset.comment;
-            const relatedComments = document.querySelectorAll(`.${commentClass}`);
-            
-            relatedComments.forEach(comment => {
-                comment.classList.remove('active');
-            });
+            if (window.innerWidth > 1100) {
+                const commentClass = mark.dataset.comment;
+                const relatedComments = document.querySelectorAll(`.${commentClass}`);
+                
+                relatedComments.forEach(comment => {
+                    comment.classList.remove('active');
+                });
+            }
         });
-    });
-    
-    // Optional: Handle comment hover to keep them visible
-    comments.forEach(comment => {
-        comment.addEventListener('mouseenter', () => {
-            comment.classList.add('active');
-        });
-        
-        comment.addEventListener('mouseleave', () => {
-            let isMarkHovered = false;
-            marks.forEach(m => {
-                if (comment.classList.contains(m.dataset.comment) && m.matches(':hover')) {
-                    isMarkHovered = true;
-                }
-            });
 
-            if (!isMarkHovered) {
-                comment.classList.remove('active');
+        // Mobile Click
+        mark.addEventListener('click', (e) => {
+            if (window.innerWidth <= 1100) {
+                e.stopPropagation(); // Prevent document click from closing immediately
+                
+                const commentClass = mark.dataset.comment;
+                const relatedComments = document.querySelectorAll(`.${commentClass}`);
+                const isActive = relatedComments.length > 0 && relatedComments[0].classList.contains('active');
+                
+                // Hide all active comments first
+                document.querySelectorAll('.comment.active').forEach(c => c.classList.remove('active'));
+                
+                // If it wasn't already active, show it
+                if (!isActive) {
+                    positionComments(mark, relatedComments);
+                    relatedComments.forEach(comment => {
+                        comment.classList.add('active');
+                    });
+                }
             }
         });
     });
     
-    // Smooth scroll for navigation links
-    const navLinks = document.querySelectorAll('.nav-link');
-    navLinks.forEach(link => {
-        link.addEventListener('click', (e) => {
-            e.preventDefault();
-            // Add your scroll logic here if needed
+    // Close comments on outside click for mobile
+    document.addEventListener('click', (e) => {
+        if (window.innerWidth <= 1100) {
+            if (!e.target.closest('.mark') && !e.target.closest('.comment')) {
+                document.querySelectorAll('.comment.active').forEach(c => c.classList.remove('active'));
+            }
+        }
+    });
+    
+    // Optional: Handle comment hover to keep them visible (Desktop only)
+    comments.forEach(comment => {
+        comment.addEventListener('mouseenter', () => {
+            if (window.innerWidth > 1100) {
+                comment.classList.add('active');
+            }
+        });
+        
+        comment.addEventListener('mouseleave', () => {
+            if (window.innerWidth > 1100) {
+                let isMarkHovered = false;
+                marks.forEach(m => {
+                    if (comment.classList.contains(m.dataset.comment) && m.matches(':hover')) {
+                        isMarkHovered = true;
+                    }
+                });
+
+                if (!isMarkHovered) {
+                    comment.classList.remove('active');
+                }
+            }
         });
     });
     
@@ -110,4 +167,82 @@ document.addEventListener('DOMContentLoaded', () => {
             button.classList.add('active');
         });
     });
+    
+    // Handle header and hero content fade on scroll
+    const header = document.querySelector('.header');
+    const heroContent = document.querySelector('.hero-content');
+    
+    window.addEventListener('scroll', () => {
+        const scrolled = window.scrollY;
+        const opacity = Math.max(0, 1 - (scrolled / 300));
+        
+        if (header) {
+            header.style.opacity = opacity;
+            header.style.visibility = opacity <= 0 ? 'hidden' : 'visible';
+        }
+        if (heroContent) {
+            heroContent.style.opacity = opacity;
+            heroContent.style.visibility = opacity <= 0 ? 'hidden' : 'visible';
+        }
+    });
+
+    // Handle mobile dashboard sliding
+    const viewport = document.querySelector('.screen-viewport');
+    const scrollLeftBtn = document.querySelector('.dash-nav-left');
+    const scrollRightBtn = document.querySelector('.dash-nav-right');
+    
+    if (scrollLeftBtn && scrollRightBtn && viewport) {
+        // Set up fade transition on both buttons
+        scrollLeftBtn.style.transition = 'opacity 0.4s ease';
+        scrollRightBtn.style.transition = 'opacity 0.4s ease';
+
+        const updateButtons = (animate = true) => {
+            const isShifted = viewport.classList.contains('shifted');
+
+            if (isShifted) {
+                // Show left button on RIGHT side
+                scrollLeftBtn.classList.add('on-right');
+                if (animate) {
+                    scrollRightBtn.style.opacity = '0';
+                    setTimeout(() => {
+                        scrollRightBtn.style.display = 'none';
+                        scrollLeftBtn.style.display = 'flex';
+                        setTimeout(() => { scrollLeftBtn.style.opacity = '1'; }, 20);
+                    }, 400);
+                } else {
+                    scrollRightBtn.style.display = 'none';
+                    scrollLeftBtn.style.display = 'flex';
+                    scrollLeftBtn.style.opacity = '1';
+                }
+            } else {
+                // Show right button on LEFT side
+                scrollLeftBtn.classList.remove('on-right');
+                if (animate) {
+                    scrollLeftBtn.style.opacity = '0';
+                    setTimeout(() => {
+                        scrollLeftBtn.style.display = 'none';
+                        scrollRightBtn.style.display = 'flex';
+                        setTimeout(() => { scrollRightBtn.style.opacity = '1'; }, 20);
+                    }, 400);
+                } else {
+                    scrollLeftBtn.style.display = 'none';
+                    scrollRightBtn.style.display = 'flex';
+                    scrollRightBtn.style.opacity = '1';
+                }
+            }
+        };
+
+        scrollRightBtn.addEventListener('click', () => {
+            viewport.classList.add('shifted');
+            updateButtons(true);
+        });
+
+        scrollLeftBtn.addEventListener('click', () => {
+            viewport.classList.remove('shifted');
+            updateButtons(true);
+        });
+
+        // Initial state (no animation)
+        updateButtons(false);
+    }
 });

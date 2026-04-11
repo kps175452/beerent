@@ -246,12 +246,21 @@ body {
 /* Screen Container */
 .screen-container {
     position: relative;
-    max-width: 1440px;
+    max-width: 1440px; /* Increased from 1270px to make it wider */
     margin: 0 auto;
     padding: 0 40px;
     opacity: 0;
     animation: fadeInStage1 2.5s cubic-bezier(0.1, 0.8, 0.2, 1) forwards;
-    animation-delay: 1.5s; /* Slightly longer initial pause */
+    animation-delay: 1.5s;
+}
+
+.screen-viewport {
+    position: relative;
+    width: 100%;
+}
+
+.screen-wrapper {
+    position: relative; /* Crucial: ensures comments move linearly with the wrapper when shifting */
 }
 
 /* Sum Panel */
@@ -450,10 +459,218 @@ body {
     color: #FFFFFF;
 }
 
+/* Mobile Navigation Buttons */
+.dash-nav {
+    position: absolute;
+    top: 50%;
+    transform: translateY(-50%);
+    width: 54px;
+    height: 54px;
+    background: transparent;
+    border: none;
+    cursor: pointer;
+    z-index: 100;
+    display: none; /* Hidden on desktop */
+    padding: 0;
+    transition: transform 0.3s ease, filter 0.3s ease;
+    filter: drop-shadow(0px 8px 16px rgba(0, 0, 0, 0.15));
+}
+
+@media (min-width: 1101px) {
+    .dash-nav {
+        display: none !important; /* Force hide on desktop, overrides JS inline flex */
+    }
+}
+
+.dash-nav:hover {
+    transform: translateY(-50%) scale(1.1);
+}
+
+.dash-nav-left {
+    left: 20px;
+}
+
+.dash-nav-right {
+    right: 20px;
+}
+
+.dash-nav img {
+    width: 100%;
+    height: 100%;
+}
+
 /* Responsive adjustments */
+@media (max-width: 1100px) {
+    .screen-viewport {
+        overflow: hidden; /* Hide overflow, we slide with transform */
+        position: relative;
+    }
+    
+    .screen-wrapper {
+        width: 1100px; /* Fixed width to create overflow */
+        min-width: 1100px;
+        transition: transform 0.8s cubic-bezier(0.4, 0, 0.2, 1);
+        margin-left: 30px; /* Initial 30px offset from the left edge */
+    }
+
+    .screen-viewport.shifted .screen-wrapper {
+        /* Dashboard is 1100px wide, starts with 30px left margin.
+           To leave 45px on the right edge of a 100vw screen (balanced breathing room):
+           (1100 + 30 + 45) = 1175px. */
+        transform: translateX(calc(100vw - 1175px)); 
+    }
+    
+    .dash-nav {
+        display: block; /* Show on mobile */
+    }
+
+    .header {
+        position: absolute; /* Scroll with content on mobile */
+    }
+
+    .header .container {
+        padding: 0 30px 0 15px; /* Fine-tuned left offset per user request */
+    }
+
+    .logo {
+        width: auto; /* Don't force full width */
+        justify-content: flex-start;
+        display: flex;
+    }
+
+    .hero {
+        padding-top: 100px;
+        min-height: auto;
+    }
+
+    .container {
+        padding: 0 30px; /* Offset from screen edges */
+    }
+
+    .header-buttons {
+        display: none;
+    }
+
+    .logo {
+        width: 100%;
+        justify-content: flex-start;
+        display: flex; /* Ensure it respects justify-start */
+    }
+
+    .hero-content {
+        display: flex;
+        flex-direction: column;
+        align-items: flex-start;
+        gap: 0px;
+    }
+
+    .hero-left {
+        display: contents; /* Allows reordering of title and buttons across description */
+    }
+
+    .hero-title {
+        order: 1;
+        font-size: 32px;
+        text-align: left;
+        margin-bottom: 24px;
+        width: 100%;
+    }
+    
+    .hero-description {
+        order: 2;
+        display: block;
+        text-align: left;
+        margin: 0 0 32px 0;
+        max-width: 100%;
+        padding-top: 0;
+        border-top: none;
+        font-size: 14px;
+        color: #666;
+        line-height: 1.5;
+    }
+
+    .hero-buttons {
+        order: 3;
+        justify-content: flex-start;
+        margin-bottom: 40px;
+        width: 100%;
+        display: flex;
+        gap: 15px;
+    }
+
+    .sum-panel {
+        display: none;
+    }
+
+    .screen-container {
+        padding: 0; /* Let dashboard fly off the left edge */
+    }
+
+    .dash-nav {
+        display: block;
+        position: fixed;
+        width: 96px !important;
+        height: 96px !important;
+        top: auto;
+        transform: none !important;
+        transition: opacity 0.4s ease;
+        opacity: 0;
+        animation: fadeInStage3 1.5s cubic-bezier(0.4, 0, 0.2, 1) forwards;
+        animation-delay: 5.2s;
+        z-index: 9999;
+        pointer-events: auto !important;
+        cursor: pointer;
+        padding: 0;
+        border: none;
+        background: transparent;
+    }
+
+    .dash-nav img {
+        width: 96px !important;
+        height: 96px !important;
+        display: block;
+    }
+
+    .dash-nav:hover {
+        transform: none !important;
+        opacity: 0.5 !important;
+    }
+
+    .dash-nav-left {
+        bottom: 30px;
+        left: 5px;
+        background: transparent;
+        display: none;
+        align-items: center;
+        justify-content: center;
+    }
+
+    .dash-nav-left img {
+        transform: scaleX(-1); /* Flips the SVG horizontally to point left */
+    }
+
+    /* When shifted, left button appears on the RIGHT side */
+    .dash-nav-left.on-right {
+        left: auto;
+        right: 5px;
+    }
+
+    .dash-nav-right {
+        bottom: 30px;
+        left: 5px; /* Final fine-tuning */
+        background: transparent;
+        display: flex; /* Initially visible */
+        align-items: center;
+        justify-content: center;
+    }
+
+    .dash-nav:active {
+        transform: none !important;
+        opacity: 0.7 !important;
+    }
+
 @media (max-width: 1400px) {
     .hero-title { font-size: 42px; }
-    .hero-description { max-width: 450px; }
 }
 
 @media (max-width: 1200px) {
