@@ -54,7 +54,7 @@ body {
     background: transparent;
     opacity: 0;
     animation: fadeInStage2 1.2s cubic-bezier(0.4, 0, 0.2, 1) forwards;
-    animation-delay: 4.3s; /* Appears after dashboard */
+    animation-delay: 3.2s; /* Appears after dashboard */
 }
 
 .header .container {
@@ -226,7 +226,7 @@ body {
     margin-bottom: 0;
     opacity: 0;
     animation: fadeInStage2 1s cubic-bezier(0.4, 0, 0.2, 1) forwards;
-    animation-delay: 4.3s; /* Appears after dashboard */
+    animation-delay: 3.2s; /* Appears after dashboard */
 }
 
 .hero-description {
@@ -251,7 +251,7 @@ body {
     padding: 0 40px;
     opacity: 0;
     animation: fadeInStage1 3.2s cubic-bezier(0.2, 0.8, 0.2, 1) forwards;
-    animation-delay: 3.3s; /* Dashboard follows text */
+    animation-delay: 2.4s; /* Dashboard follows text */
 }
 
 .screen-viewport {
@@ -272,7 +272,7 @@ body {
     margin-bottom: 12px;
     opacity: 0;
     animation: fadeInStage3 1.5s cubic-bezier(0.4, 0, 0.2, 1) forwards;
-    animation-delay: 4.3s; /* Appears after dashboard */
+    animation-delay: 3.2s; /* Appears after dashboard */
 }
 
 .btn-tag {
@@ -331,7 +331,7 @@ body {
     z-index: 10;
     opacity: 0;
     animation: fadeInStage3 1s cubic-bezier(0.4, 0, 0.2, 1) forwards;
-    animation-delay: 5.3s;
+    animation-delay: 4.2s;
 }
 
 .mark-pulse {
@@ -616,7 +616,7 @@ body {
         transition: opacity 0.4s ease;
         opacity: 0;
         animation: fadeInStage3 1.5s cubic-bezier(0.4, 0, 0.2, 1) forwards;
-        animation-delay: 6.1s;
+        animation-delay: 5.0s;
         z-index: 9999;
         pointer-events: auto !important;
         cursor: pointer;
