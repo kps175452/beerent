@@ -54,7 +54,7 @@ body {
     background: transparent;
     opacity: 0;
     animation: fadeInStage2 1.2s cubic-bezier(0.4, 0, 0.2, 1) forwards;
-    animation-delay: 3.8s; /* Follows quickly after content */
+    animation-delay: 4.0s; /* Appears after dashboard */
 }
 
 .header .container {
@@ -215,7 +215,7 @@ body {
     margin-bottom: 31px;
     opacity: 0;
     animation: fadeInStage2 1.5s cubic-bezier(0.4, 0, 0.2, 1) forwards;
-    animation-delay: 2.5s; /* Starts soon after dashboard entrance */
+    animation-delay: 2.0s; /* Starts together with description */
 }
 
 .hero-buttons {
@@ -226,7 +226,7 @@ body {
     margin-bottom: 0;
     opacity: 0;
     animation: fadeInStage2 1s cubic-bezier(0.4, 0, 0.2, 1) forwards;
-    animation-delay: 3.8s;
+    animation-delay: 4.0s; /* Appears after dashboard */
 }
 
 .hero-description {
@@ -240,7 +240,7 @@ body {
     flex-shrink: 0;
     opacity: 0;
     animation: fadeInStage2 1.2s cubic-bezier(0.4, 0, 0.2, 1) forwards;
-    animation-delay: 3.0s; /* Tighter sequence after title */
+    animation-delay: 2.0s; /* Starts together with title */
 }
 
 /* Screen Container */
@@ -250,8 +250,8 @@ body {
     margin: 0 auto;
     padding: 0 40px;
     opacity: 0;
-    animation: fadeInStage1 2.5s cubic-bezier(0.1, 0.8, 0.2, 1) forwards;
-    animation-delay: 1.5s;
+    animation: fadeInStage1 3.2s cubic-bezier(0.2, 0.8, 0.2, 1) forwards;
+    animation-delay: 3.0s; /* Dashboard follows text */
 }
 
 .screen-viewport {
@@ -272,7 +272,7 @@ body {
     margin-bottom: 12px;
     opacity: 0;
     animation: fadeInStage3 1.5s cubic-bezier(0.4, 0, 0.2, 1) forwards;
-    animation-delay: 4.2s; /* Snappy interactive finish */
+    animation-delay: 4.0s; /* Appears after dashboard */
 }
 
 .btn-tag {
@@ -331,7 +331,7 @@ body {
     z-index: 10;
     opacity: 0;
     animation: fadeInStage3 1s cubic-bezier(0.4, 0, 0.2, 1) forwards;
-    animation-delay: 4.2s;
+    animation-delay: 5.0s;
 }
 
 .mark-pulse {
@@ -616,7 +616,7 @@ body {
         transition: opacity 0.4s ease;
         opacity: 0;
         animation: fadeInStage3 1.5s cubic-bezier(0.4, 0, 0.2, 1) forwards;
-        animation-delay: 5.2s;
+        animation-delay: 5.8s;
         z-index: 9999;
         pointer-events: auto !important;
         cursor: pointer;
