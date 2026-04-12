@@ -547,10 +547,15 @@ body {
 
     .hero {
         padding-top: 100px;
-        min-height: auto;
+        padding-bottom: 20px;
+        min-height: 100vh; /* Distribute content full-screen */
     }
 
-    .container {
+    .hero > .container {
+        flex: 1;
+        display: flex;
+        flex-direction: column;
+        justify-content: center; /* Center the text block evenly */
         padding: 0 30px; /* Offset from screen edges */
     }
 
@@ -599,7 +604,7 @@ body {
     .hero-buttons {
         order: 3;
         justify-content: flex-start;
-        margin-bottom: 40px;
+        margin-bottom: 0; /* Handled by flex layout now */
         width: 100%;
         display: flex;
         gap: 15px;
@@ -611,6 +616,7 @@ body {
 
     .screen-container {
         padding: 0; /* Let dashboard fly off the left edge */
+        margin-top: 20px; /* Breathing room from text block */
     }
 
     .dash-nav {
