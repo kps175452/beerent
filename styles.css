@@ -501,6 +501,13 @@ body {
 
 /* Responsive adjustments */
 @media (max-width: 1100px) {
+    /* Make video zoom in and shift down, bringing the landscape higher up the screen */
+    .bg-video-container {
+        height: 135%;
+        top: auto;
+        bottom: 0;
+    }
+
     .screen-viewport {
         overflow: hidden; /* Hide overflow, we slide with transform */
         position: relative;
