@@ -182,10 +182,6 @@ document.addEventListener('DOMContentLoaded', () => {
 
         const opacity = Math.max(0, 1 - (scrolled / 300));
         
-        if (header) {
-            header.style.setProperty('opacity', opacity.toString(), 'important');
-            header.style.setProperty('visibility', opacity <= 0 ? 'hidden' : 'visible', 'important');
-        }
         if (heroContent) {
             heroContent.style.setProperty('opacity', opacity.toString(), 'important');
             heroContent.style.setProperty('visibility', opacity <= 0 ? 'hidden' : 'visible', 'important');
