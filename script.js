@@ -172,8 +172,14 @@ document.addEventListener('DOMContentLoaded', () => {
     const header = document.querySelector('.header');
     const heroContent = document.querySelector('.hero-content');
     
-    window.addEventListener('scroll', () => {
-        const scrolled = window.scrollY;
+    const handleScroll = (e) => {
+        let scrolled = window.scrollY || document.documentElement.scrollTop || 0;
+        
+        // If a specific container is scrolling (like body with overflow), capture its scroll position
+        if (e && e.target && typeof e.target.scrollTop === 'number') {
+            scrolled = Math.max(scrolled, e.target.scrollTop);
+        }
+
         const opacity = Math.max(0, 1 - (scrolled / 300));
         
         if (header) {
@@ -184,7 +190,18 @@ document.addEventListener('DOMContentLoaded', () => {
             heroContent.style.setProperty('opacity', opacity.toString(), 'important');
             heroContent.style.setProperty('visibility', opacity <= 0 ? 'hidden' : 'visible', 'important');
         }
-    });
+        
+        // Also fade out the sum-panel tag buttons
+        const sumPanel = document.querySelector('.sum-panel');
+        if (sumPanel) {
+            sumPanel.style.setProperty('opacity', opacity.toString(), 'important');
+            sumPanel.style.setProperty('visibility', opacity <= 0 ? 'hidden' : 'visible', 'important');
+        }
+    };
+
+    window.addEventListener('scroll', handleScroll, { passive: true });
+    // Use capture phase to catch scroll events from any internally scrolling containers (like body)
+    document.addEventListener('scroll', handleScroll, true);
 
     // Handle mobile dashboard sliding
     const viewport = document.querySelector('.screen-viewport');
