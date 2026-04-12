@@ -34,10 +34,10 @@ document.addEventListener('DOMContentLoaded', () => {
         const markNum = markClass.split('-')[1];
         let forceLeft = false;
 
-        // Smart mobile boundary check: if comment on right would spill outside the 1100px dashboard
+        // Smart mobile boundary check: if comment on right would spill outside the wrapper
         if (window.innerWidth <= 1100) {
             const commentWidth = 260; // Approximate max width
-            if (markRight + commentWidth + 20 > 1100) {
+            if (markRight + commentWidth + 20 > wrapperWidth) {
                 forceLeft = true;
             }
         }

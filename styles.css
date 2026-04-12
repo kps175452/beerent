@@ -10,6 +10,7 @@ body {
     padding: 0;
     width: 100%;
     height: 100%;
+    overflow-x: hidden;
 }
 
 body {
@@ -23,6 +24,7 @@ body {
     color: #000000;
     overflow-x: hidden;
     min-height: 100vh;
+    position: relative;
 }
 
 /* Video Background */
@@ -514,17 +516,17 @@ body {
     }
     
     .screen-wrapper {
-        width: 1100px; /* Fixed width to create overflow */
-        min-width: 1100px;
+        width: 800px; /* Scaled down for better mobile proportions */
+        min-width: 800px;
         transition: transform 0.8s cubic-bezier(0.4, 0, 0.2, 1);
-        margin-left: 30px; /* Initial 30px offset from the left edge */
+        margin-left: 20px; /* Reduced offset */
     }
 
     .screen-viewport.shifted .screen-wrapper {
-        /* Dashboard is 1100px wide, starts with 30px left margin.
-           To leave 45px on the right edge of a 100vw screen (balanced breathing room):
-           (1100 + 30 + 45) = 1175px. */
-        transform: translateX(calc(100vw - 1175px)); 
+        /* Dashboard is 800px wide, starts with 20px left margin.
+           To leave 30px on the right edge of a 100vw screen:
+           (800 + 20 + 30) = 850px. */
+        transform: translateX(calc(100vw - 850px)); 
     }
     
     .dash-nav {
@@ -621,15 +623,13 @@ body {
 
     .dash-nav {
         display: block;
-        position: fixed;
+        position: absolute;
         width: 96px !important;
         height: 96px !important;
         top: auto;
         transform: none !important;
         transition: opacity 0.4s ease;
-        opacity: 0;
-        animation: fadeInStage3 1.5s cubic-bezier(0.4, 0, 0.2, 1) forwards;
-        animation-delay: 5.0s;
+        opacity: 1; /* Instant visibility, no long wait */
         z-index: 9999;
         pointer-events: auto !important;
         cursor: pointer;
@@ -650,8 +650,8 @@ body {
     }
 
     .dash-nav-left {
-        bottom: 30px;
-        left: 5px;
+        bottom: 20px;
+        left: -10px;
         background: transparent;
         display: none;
         align-items: center;
@@ -665,12 +665,12 @@ body {
     /* When shifted, left button appears on the RIGHT side */
     .dash-nav-left.on-right {
         left: auto;
-        right: 5px;
+        right: -10px;
     }
 
     .dash-nav-right {
-        bottom: 30px;
-        left: 5px; /* Final fine-tuning */
+        bottom: 20px; /* Attach firmly to bottom of dashboard */
+        left: -10px; /* Start on the left corner */
         background: transparent;
         display: flex; /* Initially visible */
         align-items: center;
