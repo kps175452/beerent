@@ -508,6 +508,7 @@ body {
         height: 135%;
         top: auto;
         bottom: 0;
+        object-position: left bottom; /* Bring the left-aligned elements of the video into view */
     }
 
     .screen-viewport {
