@@ -793,6 +793,7 @@ textarea {
     .header-buttons {
         display: flex;
         flex: 0 0 auto;
+        transform: translateY(-7px);
     }
 
     .landing-page {
