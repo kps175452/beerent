@@ -161,6 +161,7 @@ textarea {
 }
 
 .hero-title {
+    align-self: stretch;
     max-width: 980px;
     font-size: clamp(62px, 5.8vw, 86px);
     font-weight: 400;
