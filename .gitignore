@@ -1,10 +1,12 @@
 success archive/
 .firecrawl/
 .playwright-mcp/
-tests/
 tmp/
 .gemini/
 MiroFish/
 OmniRoute/
 01/
 .ruff_cache/
+tests/.claude/
+.vscode/
+.claude/
